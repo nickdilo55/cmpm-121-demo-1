@@ -13,7 +13,7 @@ const count = document.createElement("div");
 let counter: number = 0;
 
 const updateCount = () => {
-  count.textContent = `${counter} pineapples eaten`;
+  count.textContent = `${Math.floor(counter)} pineapples eaten`;
 };
 
 updateCount();
@@ -27,7 +27,13 @@ button.addEventListener("click", () => {
 });
 app.appendChild(button);
 
-setInterval(() => {
-    counter++;
+let zero = performance.now();
+
+const updateCounter = (curr: number) => {
+    counter += (curr - zero) / 1000;
     updateCount();
-}, 1000);
+
+    zero = curr;
+    requestAnimationFrame(updateCounter);
+}
+requestAnimationFrame(updateCounter);

@@ -13,7 +13,7 @@ const count = document.createElement("div");
 let counter: number = 0;
 
 const updateCount = () => {
-    count.textContent = `${counter} pineapples eaten`;
+  count.textContent = `${counter} pineapples eaten`;
 };
 
 updateCount();
@@ -26,3 +26,8 @@ button.addEventListener("click", () => {
   updateCount();
 });
 app.appendChild(button);
+
+setInterval(() => {
+    counter++;
+    updateCount();
+}, 1000);

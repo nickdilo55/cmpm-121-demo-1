@@ -10,6 +10,7 @@ header.innerHTML = gameName;
 app.append(header);
 
 const button = document.createElement("button");
+button.textContent = "🍍";
 button.addEventListener("click", () => {
   alert("P I N E A P P L E");
 });

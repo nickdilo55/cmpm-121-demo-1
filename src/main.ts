@@ -76,9 +76,9 @@ const upgradeButtons = (
   return upgrade;
 };
 
-const upgradeA = upgradeButtons("0.1/s Growth", costs.A.value, 0.1, A, costs.A);
-const upgradeB = upgradeButtons("2/s Growth", costs.B.value, 2, B, costs.B);
-const upgradeC = upgradeButtons("50/s Growth", costs.C.value, 50, C, costs.C);
+const upgradeA = upgradeButtons("Pineapple Farm", costs.A.value, 0.1, A, costs.A);
+const upgradeB = upgradeButtons("Pineapple Plantation", costs.B.value, 2, B, costs.B);
+const upgradeC = upgradeButtons("Pineapple Factory", costs.C.value, 50, C, costs.C);
 
 const upgradeButtonVisible = () => {
   if (counter >= costs.A.value) {

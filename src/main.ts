@@ -13,9 +13,17 @@ const count = document.createElement("div");
 let counter: number = 0;
 let growth: number = 0;
 
-const A = {count : 0};
-const B = {count : 0};
-const C = {count : 0};
+const A = { count: 0 };
+const B = { count: 0 };
+const C = { count: 0 };
+
+const costs = {
+  A: {value : 10},
+  B: {value : 100},
+  C: {value : 1000},
+};
+
+const growthInc = 1.15;
 
 const growthAmount = document.createElement("div");
 const purchaseAmount = document.createElement("div");
@@ -40,17 +48,25 @@ button.addEventListener("click", () => {
 });
 app.appendChild(button);
 
-const upgradeButtons = (name: string, cost: number, growthRate: number, purchaseCount: {count: number}) => {
+const upgradeButtons = (
+  name: string,
+  cost: number,
+  growthRate: number,
+  purchaseCount: { count: number },
+  costVal: {value : number}
+) => {
   const upgrade = document.createElement("button");
-  upgrade.textContent = `${name} (COST: ${cost} Pineapples)`;
+  upgrade.textContent = `${name} (COST: ${Number(cost.toPrecision(2))} Pineapples)`;
   upgrade.disabled = true;
   upgrade.style.color = "grey";
 
   upgrade.addEventListener("click", () => {
     if (counter >= cost) {
-      counter -= cost;
+      counter -= costVal.value;
       growth += growthRate;
       purchaseCount.count++;
+      costVal.value *= growthInc;
+      upgrade.textContent = `${name} (COST: ${costVal.value.toFixed(2)} Pineapples)`;
       updateCount();
       upgradeButtonVisible();
     }
@@ -60,27 +76,26 @@ const upgradeButtons = (name: string, cost: number, growthRate: number, purchase
   return upgrade;
 };
 
-const upgradeA = upgradeButtons("0.1/s Growth", 10, 0.1, A);
-const upgradeB = upgradeButtons("2/s Growth", 100, 2, B);
-const upgradeC = upgradeButtons("50/s Growth", 1000, 50, C);
-
+const upgradeA = upgradeButtons("0.1/s Growth", costs.A.value, 0.1, A, costs.A);
+const upgradeB = upgradeButtons("2/s Growth", costs.B.value, 2, B, costs.B);
+const upgradeC = upgradeButtons("50/s Growth", costs.C.value, 50, C, costs.C);
 
 const upgradeButtonVisible = () => {
-  if (counter >= 10) {
+  if (counter >= costs.A.value) {
     upgradeA.disabled = false;
     upgradeA.style.color = "white";
   } else {
     upgradeA.disabled = true;
     upgradeA.style.color = "grey";
   }
-  if (counter >= 100) {
+  if (counter >= costs.B.value) {
     upgradeB.disabled = false;
     upgradeB.style.color = "white";
   } else {
     upgradeB.disabled = true;
     upgradeB.style.color = "grey";
   }
-  if (counter >= 1000) {
+  if (counter >= costs.C.value) {
     upgradeC.disabled = false;
     upgradeC.style.color = "white";
   } else {

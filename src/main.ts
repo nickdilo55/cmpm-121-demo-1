@@ -13,12 +13,23 @@ const count = document.createElement("div");
 let counter: number = 0;
 let growth: number = 0;
 
+const A = {count : 0};
+const B = {count : 0};
+const C = {count : 0};
+
+const growthAmount = document.createElement("div");
+const purchaseAmount = document.createElement("div");
+
 const updateCount = () => {
   count.textContent = `${Math.floor(counter)} pineapples stolen`;
+  growthAmount.textContent = `Current Growth Rate: ${Number(growth.toPrecision(2))} p/sec`;
+  purchaseAmount.textContent = `Purchased: A = ${A.count}, B = ${B.count}, C = ${C.count}`;
 };
 
 updateCount();
 app.append(count);
+app.append(growthAmount);
+app.append(purchaseAmount);
 
 const button = document.createElement("button");
 button.textContent = "🍍";
@@ -29,32 +40,54 @@ button.addEventListener("click", () => {
 });
 app.appendChild(button);
 
-const upgrades = document.createElement("button");
-upgrades.textContent = "Increase Growth (COST: 10 Pineapples)";
-upgrades.disabled = true;
-upgrades.style.color = "grey";
+const upgradeButtons = (name: string, cost: number, growthRate: number, purchaseCount: {count: number}) => {
+  const upgrade = document.createElement("button");
+  upgrade.textContent = `${name} (COST: ${cost} Pineapples)`;
+  upgrade.disabled = true;
+  upgrade.style.color = "grey";
+
+  upgrade.addEventListener("click", () => {
+    if (counter >= cost) {
+      counter -= cost;
+      growth += growthRate;
+      purchaseCount.count++;
+      updateCount();
+      upgradeButtonVisible();
+    }
+  });
+
+  app.append(upgrade);
+  return upgrade;
+};
+
+const upgradeA = upgradeButtons("0.1/s Growth", 10, 0.1, A);
+const upgradeB = upgradeButtons("2/s Growth", 100, 2, B);
+const upgradeC = upgradeButtons("50/s Growth", 1000, 50, C);
+
 
 const upgradeButtonVisible = () => {
   if (counter >= 10) {
-    upgrades.disabled = false;
-    upgrades.style.color = "white";
+    upgradeA.disabled = false;
+    upgradeA.style.color = "white";
+  } else {
+    upgradeA.disabled = true;
+    upgradeA.style.color = "grey";
   }
-  else {
-    upgrades.disabled = true;
-    upgrades.style.color = "grey";
+  if (counter >= 100) {
+    upgradeB.disabled = false;
+    upgradeB.style.color = "white";
+  } else {
+    upgradeB.disabled = true;
+    upgradeB.style.color = "grey";
   }
-}
-
-upgrades.addEventListener("click", () => {
-  if (counter >= 10) {
-    counter -= 10;
-    growth += 1;
-    updateCount();
-    upgradeButtonVisible();
+  if (counter >= 1000) {
+    upgradeC.disabled = false;
+    upgradeC.style.color = "white";
+  } else {
+    upgradeC.disabled = true;
+    upgradeC.style.color = "grey";
   }
-});
-
-app.append(upgrades);
+};
 
 let zero = performance.now();
 

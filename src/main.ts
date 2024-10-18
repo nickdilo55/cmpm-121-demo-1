@@ -21,18 +21,23 @@ interface Item {
   name: string;
   cost: number;
   rate: number;
+  description: string;
 }
 
 const allUpgrades: Item[] = [
-  { name: "Pineapple Farm", cost: 10, rate: 0.1 },
-  { name: "Pineapple Plantation", cost: 100, rate: 2 },
-  { name: "Pineapple Factory", cost: 1000, rate: 50 },
+  { name: "Pineapple Farm", cost: 10, rate: 0.1, description: "A basic pineapple farm"},
+  { name: "Pineapple Plantation", cost: 100, rate: 2, description: "Delivers the most exquisite pineapples" },
+  { name: "Pineapple Factory", cost: 1000, rate: 50, description: "Manufactoring pineapples since '01" },
+  { name: "Pineapple Island", cost: 5000, rate: 250, description: "Where all pineapples grow in peace" },
+  { name: "Pineapple Heaven", cost: 30000, rate: 1000, description: "Godlike pineapple growth" }
 ];
 
 const purchaseCount: { [key: string]: number } = {
   "Pineapple Farm": 0,
   "Pineapple Plantation": 0,
   "Pineapple Factory": 0,
+  "Pineapple Island": 0,
+  "Pineapple Heaven": 0
 };
 
 const growthInc = 1.15;
@@ -65,6 +70,7 @@ const upgradeButtons: HTMLButtonElement[] = [];
 allUpgrades.forEach((item) => {
   const upgrade = document.createElement("button");
   upgrade.textContent = `${item.name} (COST: ${Number(item.cost.toPrecision(2))} Pineapples)`;
+  upgrade.title = item.description;
   upgrade.disabled = true;
   upgrade.style.color = "grey";
 
@@ -75,6 +81,7 @@ allUpgrades.forEach((item) => {
       purchaseCount[item.name]++;
       item.cost *= growthInc;
       upgrade.textContent = `${item.name} (COST: ${item.cost.toFixed(2)} Pineapples)`;
+      upgrade.title = item.description;
       updateCount();
       upgradeButtonVisible();
     }

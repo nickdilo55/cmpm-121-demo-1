@@ -17,10 +17,22 @@ const A = { count: 0 };
 const B = { count: 0 };
 const C = { count: 0 };
 
-const costs = {
-  A: {value : 10},
-  B: {value : 100},
-  C: {value : 1000},
+interface Item {
+  name: string;
+  cost: number;
+  rate: number;
+}
+
+const allUpgrades: Item[] = [
+  { name: "Pineapple Farm", cost: 10, rate: 0.1 },
+  { name: "Pineapple Plantation", cost: 100, rate: 2 },
+  { name: "Pineapple Factory", cost: 1000, rate: 50 },
+];
+
+const purchaseCount: { [key: string]: number } = {
+  "Pineapple Farm": 0,
+  "Pineapple Plantation": 0,
+  "Pineapple Factory": 0,
 };
 
 const growthInc = 1.15;
@@ -48,59 +60,39 @@ button.addEventListener("click", () => {
 });
 app.appendChild(button);
 
-const upgradeButtons = (
-  name: string,
-  cost: number,
-  growthRate: number,
-  purchaseCount: { count: number },
-  costVal: {value : number}
-) => {
+const upgradeButtons: HTMLButtonElement[] = [];
+
+allUpgrades.forEach((item) => {
   const upgrade = document.createElement("button");
-  upgrade.textContent = `${name} (COST: ${Number(cost.toPrecision(2))} Pineapples)`;
+  upgrade.textContent = `${item.name} (COST: ${Number(item.cost.toPrecision(2))} Pineapples)`;
   upgrade.disabled = true;
   upgrade.style.color = "grey";
 
   upgrade.addEventListener("click", () => {
-    if (counter >= cost) {
-      counter -= costVal.value;
-      growth += growthRate;
-      purchaseCount.count++;
-      costVal.value *= growthInc;
-      upgrade.textContent = `${name} (COST: ${costVal.value.toFixed(2)} Pineapples)`;
+    if (counter >= item.cost) {
+      counter -= item.cost;
+      growth += item.rate;
+      purchaseCount[item.name]++;
+      item.cost *= growthInc;
+      upgrade.textContent = `${item.name} (COST: ${item.cost.toFixed(2)} Pineapples)`;
       updateCount();
       upgradeButtonVisible();
     }
   });
 
   app.append(upgrade);
-  return upgrade;
-};
-
-const upgradeA = upgradeButtons("Pineapple Farm", costs.A.value, 0.1, A, costs.A);
-const upgradeB = upgradeButtons("Pineapple Plantation", costs.B.value, 2, B, costs.B);
-const upgradeC = upgradeButtons("Pineapple Factory", costs.C.value, 50, C, costs.C);
+  upgradeButtons.push(upgrade);
+});
 
 const upgradeButtonVisible = () => {
-  if (counter >= costs.A.value) {
-    upgradeA.disabled = false;
-    upgradeA.style.color = "white";
-  } else {
-    upgradeA.disabled = true;
-    upgradeA.style.color = "grey";
-  }
-  if (counter >= costs.B.value) {
-    upgradeB.disabled = false;
-    upgradeB.style.color = "white";
-  } else {
-    upgradeB.disabled = true;
-    upgradeB.style.color = "grey";
-  }
-  if (counter >= costs.C.value) {
-    upgradeC.disabled = false;
-    upgradeC.style.color = "white";
-  } else {
-    upgradeC.disabled = true;
-    upgradeC.style.color = "grey";
+  for (let i = 0; i < allUpgrades.length; i++) {
+    if (counter >= allUpgrades[i].cost) {
+      upgradeButtons[i].disabled = false;
+      upgradeButtons[i].style.color = "white";
+    } else {
+      upgradeButtons[i].disabled = true;
+      upgradeButtons[i].style.color = "grey";
+    }
   }
 };
 
